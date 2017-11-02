@@ -1,21 +1,20 @@
-var webpack = require('webpack');
-var WebpackDevServer = require('webpack-dev-server');
-var config = require('./webpack.config');
+var webpack = require("webpack");
+var WebpackDevServer = require("webpack-dev-server");
+var config = require("./webpack.config");
 
-const PORT = 9009
+const PORT = 9009;
 
 new WebpackDevServer(webpack(config), {
-    publicPath: config.output.publicPath,
-    watchOptions: {
-      aggregateTimeout: 300,
-      poll: 1000,
-      ignored: /node_modules/
-    }
-  })
-  .listen(PORT, '0.0.0.0', function (err, result) {
-    if (err) {
-      console.log(err);
-    }
+  publicPath: config.output.publicPath,
+  watchOptions: {
+    aggregateTimeout: 300,
+    poll: 1000,
+    ignored: /node_modules/
+  }
+}).listen(PORT, "0.0.0.0", function(err, result) {
+  if (err) {
+    console.log(err);
+  }
 
-    console.log(`Running at http://0.0.0.0:${PORT}`);
-  });
+  console.log(`Running at http://0.0.0.0:${PORT}`);
+});

@@ -17,7 +17,8 @@ class App extends Component {
     this.socket = new WebSocket("ws://10.30.20.109:9001");
     this.socket.addEventListener("message", event => {
       const data = JSON.parse(event.data);
-      this.setState({ userCount: data.userCount });
+      if (data.users)
+        this.setState({ userCount: data.users });
       if (data.content) {
         this.setState({ messages: [...this.state.messages, data] });
       }
