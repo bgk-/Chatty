@@ -1,8 +1,8 @@
 const express = require("express");
 const ws = require("ws");
-const SocketServer = require("ws").Server;
+// const SocketServer = require("ws").Server;
 const uuidv4 = require("uuid/v4");
-
+const RandomColour = require("randomcolor");
 const PORT = 9001;
 
 const server = express()
@@ -12,36 +12,35 @@ const server = express()
     console.log(`Listening on ${PORT}`)
   );
 
-const wss = new SocketServer({ server });
+const wss = new ws.Server({ server });
 
-function notification(content) {
-  return JSON.stringify({
-    key: uuidv4(),
-    type: "incomingNotification",
-    content
-  });
-}
+function broadcast(data, color) {
+  const message = JSON.parse(data);
 
-function broadcast(data) {
-  const returnData = JSON.parse(data);
+  imgSrc = message.content.match(/(https?.*(\.jpe?g|\.png|\.gif))/i)
+  message.imgSrc = imgSrc ? imgSrc[0] : ''
+
+  message.key = uuidv4();
+  message.color = color
+  message.type = message.type.replace(/post/, "incoming");
+  message.userCount = wss.clients.size;
   wss.clients.forEach(client => {
-    if (returnData.type === "postNotification") {
-      client.send(notification(returnData.content));
-    } else if (client.readyState === ws.OPEN) {
-      returnData.key = uuidv4();
-      client.send(JSON.stringify(returnData));
-    }
+    client.send(JSON.stringify(message));
   });
 }
 
 wss.on("connection", socket => {
+  const color = RandomColour();
   console.log("Client connected");
-  broadcast(notification("A new user has joined the channel."));
-  socket.on("message", broadcast);
+  broadcast(`{"type": "", "content":" "}`);
+
+  socket.on("message", data => {
+    broadcast(data, color);
+  });
 
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
   socket.on("close", () => {
-    broadcast(notification("A user has left the channel."));
+    broadcast(`{"type": "", "content":" "}`);
     console.log("Client disconnected");
   });
 });
