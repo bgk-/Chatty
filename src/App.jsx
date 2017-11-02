@@ -17,24 +17,32 @@ class App extends Component {
     this.socket = new WebSocket("ws://10.30.20.109:9001");
     this.socket.addEventListener("message", event => {
       const data = JSON.parse(event.data);
-      if (data.content){
-        this.setState({ messages: [...this.state.messages, data]})
+      this.setState({ userCount: data.userCount });
+      if (data.content) {
+        this.setState({ messages: [...this.state.messages, data] });
       }
+      if (
+        window.innerHeight + window.pageYOffset >=
+        document.body.offsetHeight - 2
+      )
+        window.scrollTo(0, document.body.scrollHeight);
     });
   }
 
   submitMessage = message => {
-    const { username, content} = message;
+    const { username, content } = message;
     if (this.state.currentUser !== username) {
-      this.socket.send(JSON.stringify({
-        username,
-        type: "postNotification",
-        content: `${this.state
-          .currentUser} has changed their name to ${username}.`
-      }));
-      this.setState({currentUser: username})
+      this.socket.send(
+        JSON.stringify({
+          username,
+          type: "postNotification",
+          content: `${this.state
+            .currentUser} has changed their name to ${username}.`
+        })
+      );
+      this.setState({ currentUser: username });
     }
-    
+
     const tempMsgs = {
       type: "postMessage",
       username: username,
@@ -46,11 +54,9 @@ class App extends Component {
   render() {
     return (
       <div>
-        <NavBar userCount={this.state.userCount}/>
-        <MessageList messages={this.state.messages}/>
-        <ChatBar
-          submitMessage={this.submitMessage}
-        />
+        <NavBar userCount={this.state.userCount} />
+        <MessageList messages={this.state.messages} />
+        <ChatBar submitMessage={this.submitMessage} />
       </div>
     );
   }
