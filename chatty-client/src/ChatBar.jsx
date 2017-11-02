@@ -39,6 +39,7 @@ class ChatBar extends Component {
         <input
           className="chatbar-username"
           placeholder="Your Name (Optional)"
+          onKeyDown={this.submitNewMessage}
           onChange={this.onUserChange}
           value={this.state.username}
         />
