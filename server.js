@@ -16,23 +16,24 @@ const wss = new ws.Server({ server });
 
 function broadcast(data, color) {
   const message = JSON.parse(data);
-
-  imgSrc = message.content.match(/(https?.*(\.jpe?g|\.png|\.gif))/i)
-  message.imgSrc = imgSrc ? imgSrc[0] : ''
-
   message.key = uuidv4();
   message.color = color
   message.type = message.type.replace(/post/, "incoming");
-  message.userCount = wss.clients.size;
   wss.clients.forEach(client => {
     client.send(JSON.stringify(message));
   });
 }
 
+function updateUserCount(users){
+  wss.clients.forEach(client => {
+    client.send(`{"users":"${users}"}`)
+  })
+}
+
 wss.on("connection", socket => {
   const color = RandomColour();
   console.log("Client connected");
-  broadcast(`{"type": "", "content":" "}`);
+  updateUserCount(wss.clients.size)
 
   socket.on("message", data => {
     broadcast(data, color);
@@ -40,7 +41,7 @@ wss.on("connection", socket => {
 
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
   socket.on("close", () => {
-    broadcast(`{"type": "", "content":" "}`);
     console.log("Client disconnected");
+    updateUserCount(wss.clients.size)
   });
 });
