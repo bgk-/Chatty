@@ -86,3 +86,17 @@ body {
   padding: 0 10px;
   text-decoration: none;
 }
+
+.user-count {
+  position: absolute;
+  right: 0;
+  margin-right: 15px
+}
+
+.img-message {
+  max-width: 600px;
+  display:block;
+  padding: 10px;
+  margin: 10px 0;
+  background-color: lightgrey;
+}

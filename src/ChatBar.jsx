@@ -2,8 +2,8 @@ import React, {Component} from 'react';
 
 
 class ChatBar extends Component {
-  constructor(){
-    super()
+  constructor(props){
+    super(props)
 
     this.state = {
       username: '',
@@ -25,9 +25,11 @@ class ChatBar extends Component {
 
   submitNewMessage = (event) => {
     if (event.key === "Enter") {
-      this.props.submitMessage(this.state)
+      const {username, content} = this.state
+      this.props.submitMessage({username: username || "Anonymous", content, color: this.props.userColor})
       this.setState({content: ''})
     }
+  
   }
 
   render() {

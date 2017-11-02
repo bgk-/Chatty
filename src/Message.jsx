@@ -2,14 +2,20 @@ import React, { Component } from "react";
 
 class Message extends Component {
   render() {
-    const { content, username } = this.props
+    const { type, content, username, color, imgSrc } = this.props;
+    if (type === "incomingNotification") {
+      return (
+        <div className="message system">
+          { content }
+        </div>
+      );
+    }
     return (
       <div className="message">
-      <span className="message-username">{username}</span>
-      <span className="message-content">
-        { content }
-      </span>
-    </div>
+        <span className="message-username" style={{ color }}>{username}</span>
+        <span className="message-content">{content} {imgSrc && <img src={imgSrc} className='img-message'/>}</span>
+
+      </div>
     );
   }
 }

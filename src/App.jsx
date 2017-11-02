@@ -1,39 +1,57 @@
-import React, {Component} from 'react';
-import NavBar from './NavBar.jsx';
-import MessageList from './MessageList.jsx';
-import ChatBar from './ChatBar.jsx';
+import React, { Component } from "react";
+import NavBar from "./NavBar.jsx";
+import MessageList from "./MessageList.jsx";
+import ChatBar from "./ChatBar.jsx";
 
-import tempData from './tempData.json';
 class App extends Component {
-
-  constructor(props){
-
-    super(props)
-    this.state = tempData
-
-    this.submitMessage = this.submitMessage.bind(this)
+  constructor(props) {
+    super(props);
+    this.state = {
+      currentUser: "Anonymous",
+      messages: [],
+      userCount: 0
+    };
   }
 
-  submitMessage(message) {
-    const { username, content } = message
-    const tempMsgs = this.state.messages
-    tempMsgs.push({
-      id: Math.random()*100000,
-      username: username || "Anonymous",
+  componentDidMount() {
+    this.socket = new WebSocket("ws://10.30.20.109:9001");
+    this.socket.addEventListener("message", event => {
+      const data = JSON.parse(event.data);
+      if (data.content){
+        this.setState({ messages: [...this.state.messages, data]})
+      }
+    });
+  }
+
+  submitMessage = message => {
+    const { username, content} = message;
+    if (this.state.currentUser !== username) {
+      this.socket.send(JSON.stringify({
+        username,
+        type: "postNotification",
+        content: `${this.state
+          .currentUser} has changed their name to ${username}.`
+      }));
+      this.setState({currentUser: username})
+    }
+    
+    const tempMsgs = {
+      type: "postMessage",
+      username: username,
       content
-    })
-    this.setState( {
-      messages: tempMsgs
-    })
-  }
-  
+    };
+    this.socket.send(JSON.stringify(tempMsgs));
+  };
+
   render() {
     return (
       <div>
-        <NavBar />
-        <MessageList messages= { this.state.messages}/>
-        <ChatBar currentUser= { this.state.currentUser} submitMessage = { this.submitMessage }/>
-      </div>  
+        <NavBar userCount={this.state.userCount}/>
+        <MessageList messages={this.state.messages}/>
+        <ChatBar
+          submitMessage={this.submitMessage}
+        />
+      </div>
     );
   }
 }
