@@ -54,4 +54,7 @@ crashlytics-build.properties
 fabric.properties
 
 mimic.html
+<<<<<<< HEAD
 webpack.config.js
+=======
+>>>>>>> chatty-server/master

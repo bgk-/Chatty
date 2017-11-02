@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "react-simple-boilerplate",
   "version": "1.0.0",
   "description": "Simple and lightweight Boilerplate for ReactJS projects",
@@ -50,5 +51,23 @@
     "react": "15.4.2",
     "react-dom": "15.4.2",
     "uuid": "^3.1.0"
+=======
+  "name": "chatty-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "4.16.2",
+    "randomcolor": "^0.5.3",
+    "uuid": "^3.1.0",
+    "ws": "3.2.0"
+>>>>>>> chatty-server/master
   }
 }
