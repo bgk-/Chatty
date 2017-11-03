@@ -38,6 +38,6 @@ Chat application using React and WebSockets.
 
   ## Screenshots
 
-![Screenshot of Chatty App](Chatty/docs/Chatty-App-Screenshot.png)
+![Screenshot of Chatty App](http://github.com/bgk-/Chatty/docs/Chatty-App-Screenshot.png)
 
 ### Functional Requirements Kept in functional-requirements.md
